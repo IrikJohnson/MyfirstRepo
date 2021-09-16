@@ -1,0 +1,59 @@
+---
+title: "Irik Dashboard Report"
+output: 
+  flexdashboard::flex_dashboard:
+    storyboard: true
+---
+
+```{r setup, include=FALSE}
+# load packages
+library(flexdashboard)
+library(tidyverse)
+library(plotly)
+library(DT)
+library(leaflet)
+library(viridis)
+
+# load data
+RawData1 <- read.csv("data/Session6_ExampleData.csv")
+```
+
+
+### Create a GGPLOTYLY Object
+
+```{r GGPLOTLY}
+# use of ggplotly
+
+# Make athlete column a factor
+RawData1$Athlete <- as.factor(RawData1$Athlete)
+
+# GGPLOTLY
+DisposalTypePlot <- ggplot(RawData1, aes(x = Quarter, y = DisposalType)) +
+  geom_jitter(aes(colour = Athlete)) +
+  scale_colour_viridis_d() +
+  geom_boxplot(alpha = 0.3) +
+  theme_classic()
+# make an interactive plot
+ggplotly(DisposalTypePlot)
+```
+
+
+### Create an interactive table uisng data table package 
+
+```{r CreateTable}
+# Create a table using the DT package
+# First do some tidying
+DataTidied1 <- RawData1 %>%
+  group_by(Athlete, DisposalType)
+# call to the DT package
+datatable(DataTidied1, extensions = 'Buttons',
+          options = list(dom = 'Bfrtip', buttons = c('copy', 'csv', 'excel', 'pdf', 'print')))
+```
+
+
+### Chart C
+
+```{r}
+
+```
+
